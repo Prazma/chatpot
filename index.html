@@ -1,20 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
 		<title>ChatterPot</title>
 		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<style>
+			
+		</style>
 	</head>
 	<body>
-		<input type="file" accept="audio/*" capture="microphone" id="captan">
-		<br>
-		<audio id="recesors" controls></audio>
-		<script>
-			var recorder = document.getElementById('captan');
-			var player = document.getElementById('recesors');
-			recorder.addEventListener('change', function(e) {
-				var file = e.target.files[0]; 
-				player.src =  URL.createObjectURL(file);
-			});
-		</script>
+		<div id="proport">
+			<script>
+				function hasGetUserMedia() {
+					return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+							  navigator.mozGetUserMedia || navigator.msGetUserMedia);
+				}
+				if (hasGetUserMedia()) {
+					alert('ChatterPot is ready on your chatty wonderful device!');
+				} else {
+					alert('ChatterPot does not support your mouth-shut device');
+				}
+			</script>
+		</div>
 	</body>
 </html>
