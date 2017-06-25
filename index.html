@@ -1,24 +1,346 @@
 <!doctype html>
 <html>
 	<head>
-		<title>ChatterPot</title>
+		<title>ChatterPot - アカウントがいらないオンライン伝言ゲームチャットサイト</title>
 		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<meta name="author" content="Tomoyoshi Yamamoto">
+		<meta name="description" content="オンライン伝言ゲームサイト">
+		<link rel="shortcut icon" type="image/png" href="chatterpot.png"/>
+		<link rel="apple-touch-icon" href="chatterpot.png">
+		<meta name="apple-mobile-web-app-title" content="ChatterPot">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<script src="https://raw.githubusercontent.com/mattdiamond/Recorderjs/master/src/recorder.js"></script>
+		<script src='https://cdn.firebase.com/js/client/2.4.0/firebase.js'></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<style>
-			
+			body {
+				margin: 0;
+				outline: none;
+				font-family: sans-serif;
+			}
+			.btn {
+				width: 50%;
+				padding: 5px;
+				font-size: 17px;
+				font-weight: bold;
+				background: #03a9f4;
+				color: #ffffff;
+				border: none;
+			}
+			#tabdon {
+				box-shadow: 0px 2px 5px #888888;
+				position: fixed;
+				top: 0;
+				width: 100%;
+				z-index: 100;
+			}
+			.purp {
+				background: #ff0066;
+				color: #ffffff;
+			}
+			#denport {
+				position: absolute;
+				top: 0;
+				height: 100vh;
+				width: 50%;
+				background: #f1f1f1;
+				z-index: 50;
+				box-shadow: inset 0px 0px 15px #888888;
+			}
+			#chaport {
+				position: absolute;
+				top: 0;
+				right: 0;
+				height: 100vh;
+				width: 50%;
+				z-index: 50;				
+			}
+			#densult, #chasult {
+				width: 90%;
+				margin-right: auto;
+				margin-left: auto;
+			}
+			.pilple {
+			    background-color: #5260B0;
+				background-image: -webkit-linear-gradient(270deg, #6576C6 0%, #39469C 90%);
+				background-image: linear-gradient(-180deg, #6576C6 0%, #39469C 90%);
+				color: #ffffff;
+				padding: 5px;
+				text-align: center;
+				z-index: 700;
+				box-shadow: 0px -2px 5px #888888;
+				-webkit-appearance: button;
+				padding: 3px 10px;
+				font-size: 12px;
+				line-height: 20px;
+				color: #ffffff;
+				display: inline-block;
+				padding: 6px 12px;
+				font-size: 14px;
+				font-weight: 600;
+				line-height: 20px;
+				white-space: nowrap;
+				vertical-align: middle;
+				cursor: pointer;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				background-repeat: repeat-x;
+				background-position: -1px -1px;
+				background-size: 110% 110%;
+				border: 1px solid rgba(27,31,35,0.2);
+				border-radius: 0.25em;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				width: 90%;
+				margin: 5px;
+			}
+			fidget {
+				-webkit-appearance: button;
+				padding: 3px 10px;
+				font-size: 12px;
+				line-height: 20px;
+				color: #24292e;
+				background-color: #eff3f6;
+				background-image: -webkit-linear-gradient(270deg, #fafbfc 0%, #eff3f6 90%);
+				background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
+				position: relative;
+				display: inline-block;
+				padding: 6px 4px;
+				font-size: 14px;
+				font-weight: 600;
+				line-height: 20px;
+				white-space: nowrap;
+				vertical-align: middle;
+				cursor: pointer;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				background-repeat: repeat-x;
+				background-position: -1px -1px;
+				background-size: 110% 110%;
+				border: 1px solid rgba(27,31,35,0.2);
+				border-radius: 0.25em;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				width: 80%;
+				margin: 5px;
+			}
+			.gold {
+			    background-color: #ff9800;
+				color: #ffffff;
+				padding: 5px;
+				text-align: center;
+				z-index: 700;
+				box-shadow: 0px -2px 5px #888888;
+				-webkit-appearance: button;
+				padding: 3px 10px;
+				font-size: 12px;
+				line-height: 20px;
+				color: #ffffff;
+				display: inline-block;
+				padding: 6px 12px;
+				font-size: 14px;
+				font-weight: 600;
+				line-height: 20px;
+				white-space: nowrap;
+				vertical-align: middle;
+				cursor: pointer;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				background-repeat: repeat-x;
+				background-position: -1px -1px;
+				background-size: 110% 110%;
+				border: 1px solid rgba(27,31,35,0.2);
+				border-radius: 0.25em;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				width: 90%;
+				margin: 5px;
+			}
+			#postport {
+				position: fixed;
+				bottom: 0;
+				width: 100%;
+				padding: 5px;
+				background: #ffffff;
+				z-index: 2000;
+				box-shadow: 0px -2px 10px #888888;
+				text-align: center;
+			}
+			.texput {
+				min-height: 34px;
+				padding: 0px 8px;
+				font-size: 14px;
+				line-height: 20px;
+				color: #24292e;
+				vertical-align: middle;
+				background-color: #fff;
+				background-repeat: no-repeat;
+				background-position: right 8px center;
+				border: 1px solid #d1d5da;
+				border-radius: 3px;
+				outline: none;
+				box-shadow: inset 0 1px 2px rgba(27,31,35,0.075);
+				width: 87%;
+			}
+			#densult, #chasult {
+				margin-top: 45px;
+				margin-bottom: 45px;
+			}
+			.seletn {
+				border-radius: 3px;
+				padding: 8px;
+				-webkit-appearance: none;
+				width: 90%;
+				box-shadow: 0px -2px 5px #888888;
+			}
+			.mic {
+				width: 100px;
+				height: 100px;
+				border-radius: 50%;
+				border: none;
+				background: #03a9f4;
+				color: #ffffff;
+				font-weight: bold;
+				font-size: 20px;
+				box-shadow: 0px 2px 5px #888888;
+				transition: 0.5s;
+				-webkit-transition: 0.5s;
+			}
+			.def {
+				background-color: #eff3f6;
+				background-image: -webkit-linear-gradient(270deg, #fafbfc 0%, #eff3f6 90%);
+				background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
+				color: #252525;
+			}
+			.msg {
+				text-align: center;
+				width: 90%;
+				margin-left: auto;
+				margin-right: auto;
+				padding: 5px;
+				background: #f1f8ff;
+				border: 1px solid #c8e1ff;
+				border-radius: 3px;
+				margin-top: 10px;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="proport">
+			<div id="denport">
+				<div id="densult">
+					
+				</div>
+			</div>
+			<div id="chaport">
+				<div id="chasult">
+					
+				</div>
+			</div>
+			<div id="tabdon">
+				<button class="btn purp">伝言ゲーム</button><button class="btn">チャット</button>
+			</div>
+			<div id="postport">
+				<div id="logport" style="display: none;">
+					<br>
+					<input id="username" type="text" placeholder="ニックネーム" class="texput"><br><br>
+					<input id="idbill" type="text" placeholder="ID (オプショナル：ポイント・オリジナルチャット内容の作成と保存ができます)" class="texput"><br><br>
+					<button class="btn pilple" onclick="strt()">はじめる</button><br>
+				</div>
+				<div id="recstudio" style="display: none;">
+					<div id="stdio" style="display: none;">
+						<br><button class="mic">REC</button><br>
+					</div>
+					<div id="gmreq">
+						<br><button id="gmrequest" class="pilple">新しいゲームをはじめる</button><br>
+					</div>
+					<br>
+					<span><strong>チャット</strong></span><br>
+					<select id="mescon" class="pilple def sletn">
+						<option value="... \(-_-)/">チャット内容を選択(選択しない)</option>
+						<option value="いいね！ \(^_^)/">いいね！</option>
+						<option value="笑笑 \(^o^)/">笑笑</option>
+						<option value="聞こえなかった、、、 \(-3-)/">きこえなかった、、、</option>
+						<option value='え？え？なんて？ \(-"-)/'>え？え？なんて？</option>
+						<option value="やったー！ \(^u^)/">やったー！</option>
+					</select><br><br>
+					<button id="postbtn" class="pilple" style="width: 44%;">送信</button>
+					<button class="pilple def" onclick="clsport()" style="width: 44%;">とじる</button>
+				</div>
+				<div id="ctrlcenter">
+					<button id="ctrlbtn" class="pilple" onclick="jois()">参加する</button>
+				</div>
+			</div>
 			<script>
-				function hasGetUserMedia() {
-					return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-							  navigator.mozGetUserMedia || navigator.msGetUserMedia);
+				function jois() {
+					document.getElementById("logport").style.display = "";
+					document.getElementById("ctrlcenter").style.display = "none";
+					document.getElementById("ctrlcenter").innerHTML = '<button id="ctrlbtn" class="pilple" onclick="opnport()">あける</button>';
 				}
-				if (hasGetUserMedia()) {
-					alert('ChatterPot is ready on your chatty wonderful device!');
-				} else {
-					alert('ChatterPot does not support your mouth-shut device');
+				function clsport() {
+					document.getElementById("recstudio").style.display = "none"
+					document.getElementById("ctrlcenter").style.display = "";
+					document.getElementById("chasult").style.marginBottom = "45px";
+					document.getElementById("densult").style.marginBottom = "0px";
 				}
+				function opnport() {
+					document.getElementById("recstudio").style.display = ""
+					document.getElementById("ctrlcenter").style.display = "none";
+					document.getElementById("chasult").style.marginBottom = "250px";
+					document.getElementById("densult").style.marginBottom = "0px";
+					window.scrollTo(0,document.body.scrollHeight);
+				}
+				function strt() {
+					document.getElementById("recstudio").style.display = "";
+					document.getElementById("logport").style.display = "none";
+				}
+				window.scrollTo(0,document.body.scrollHeight);
+				var myFirebase = new Firebase('https://routifi-4dd03.firebaseio.com');
+				var usernameInput = document.querySelector('#username');
+				var idnix = document.querySelector('#idbill');
+				var chatype = document.querySelector('#mescon');
+				var postButton = document.querySelector('#postbtn');
+				postButton.addEventListener("click", function() {
+					var dog = usernameInput.value;
+					if(dog == "") {
+						var msgUser = "無名さん";
+					} else {
+						var msgUser = usernameInput.value;
+					}
+					var msgText = chatype.value;
+					var idText = idnix.value;
+					myFirebase.push({username:msgUser, text:msgText, id:idText});
+				});
+				var startListening = function() {
+					myFirebase.on('child_added', function(snapshot) {
+						var msg = snapshot.val();
+						var msgUsernameElement = document.createElement("fidget");
+						msgUsernameElement.textContent = msg.username;
+						
+						var msgTextElement = document.createElement("p");
+						msgTextElement.textContent = msg.text;
+						
+						var msgElement = document.createElement("div");
+						msgElement.appendChild(msgUsernameElement);
+						msgElement.appendChild(msgTextElement);
+						msgElement.className = "msg";
+						document.getElementById("chasult").appendChild(msgElement);
+						
+						document.getElementById("chasult").appendChild(msgElement);
+						window.scrollTo(0,document.body.scrollHeight);
+					});
+				}
+				startListening();
 			</script>
 		</div>
 	</body>
